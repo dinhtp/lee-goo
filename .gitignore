@@ -1,0 +1,13 @@
+.env
+*.exe
+*.test
+/tmp/
+vendor/
+# compiled binaries at repo root
+/lee-goo
+/api
+/worker
+
+.claude
+plans
+CLAUDE.md

@@ -1,0 +1,20 @@
+name: user
+version: 1.0.0
+description: User management module
+status: stable
+dependencies:
+  required: []
+  optional: []
+provides:
+  services:
+    - UserService
+  events:
+    - user.created
+    - user.updated
+extension_points:
+  - user.after_created
+migrations:
+  path: migrations/
+  transactional: true
+config:
+  prefix: user

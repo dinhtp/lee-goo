@@ -1,0 +1,21 @@
+name: authorization
+version: 1.0.0
+description: RBAC authorization module
+status: stable
+dependencies:
+  required:
+    - user
+  optional: []
+provides:
+  services:
+    - RoleService
+    - PolicyService
+  events:
+    - authorization.role_assigned
+    - authorization.role_removed
+extension_points: []
+migrations:
+  path: migrations/
+  transactional: true
+config:
+  prefix: authz

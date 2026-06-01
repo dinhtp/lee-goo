@@ -1,0 +1,20 @@
+name: authentication
+version: 1.0.0
+description: JWT-based authentication module
+status: stable
+dependencies:
+  required:
+    - user
+  optional: []
+provides:
+  services:
+    - AuthService
+  events:
+    - authentication.login_succeeded
+    - authentication.login_failed
+extension_points: []
+migrations:
+  path: ""
+  transactional: false
+config:
+  prefix: auth

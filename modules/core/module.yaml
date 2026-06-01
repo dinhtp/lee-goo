@@ -1,0 +1,21 @@
+name: core
+version: 1.0.0
+description: Module management system
+status: stable
+dependencies:
+  required: []
+  optional: []
+provides:
+  services:
+    - ModuleService
+  events:
+    - module.installed
+    - module.enabled
+    - module.disabled
+    - module.uninstalled
+extension_points: []
+migrations:
+  path: migrations/
+  transactional: true
+config:
+  prefix: module
