@@ -24,23 +24,16 @@ Core infrastructure fully implemented and stable.
 
 ## Phase 2 — Complete Module CLI (Near-term)
 
-All 15 `module` subcommands are currently stubs. Wire them to the actual service layer.
+All 6 `module` subcommands are currently stubs. Wire them to the actual service layer.
 
 | Command | Priority | Blocker |
 |---------|----------|---------|
 | `module list` | High | needs fx app initialization for disk discovery |
-| `module status <name>` | High | needs DB connection in CLI context |
 | `module install <name>` | High | needs full lifecycle service wiring |
-| `module enable/disable <name>` | High | same |
-| `module migrate [name]` | High | DATABASE_URL env resolution |
-| `module graph` | Medium | topological sort already implemented |
-| `module doctor` | Medium | manifest validation already implemented |
-| `module sync` | Medium | reconcile DB with disk |
+| `module enable <name>` | High | same |
+| `module disable <name>` | High | same |
+| `module uninstall <name>` | High | same |
 | `module make <name>` | Medium | scaffold generator (template) |
-| `module upgrade <name>` | Low | version bump flow |
-| `module remove/uninstall` | Low | source-code-aware, destructive |
-| `module tidy` | Low | shell out to go mod tidy per workspace module |
-| `module compile-check` | Low | shell out to go build ./... |
 
 **Key work:** Initialize a minimal fx app within CLI context (no HTTP server) to access DB and service layer. Factor `pkg/cliapp` as a variant of `pkg/testapp` without HTTP.
 
@@ -113,7 +106,7 @@ Each follows the same module structure pattern as existing modules.
 | # | Issue | Severity | File |
 |---|-------|----------|------|
 | 1 | Dockerfile references `modules/module_manager/` (old name) | High | `deployment/Dockerfile` |
-| 2 | `module` CLI subcommands are all stubs | High | `cmd/module/*.go` |
+| 2 | `module` CLI: 6 commands exist, all stubs (no service wiring yet) | High | `cmd/module/*.go` |
 | 3 | Default role hook in authz is a no-op TODO | Medium | `modules/authorization/fx/module.go` |
 | 4 | `POST /users/:id/roles` handler exists but not wired in router | Medium | `modules/authorization/internal/handler/role/router.go` |
 | 5 | `system/http` uses `slog.Default()` in goroutine instead of injected logger | Low | `system/http/server.go` |

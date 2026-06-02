@@ -30,21 +30,18 @@ make run-api
 
 # 4. Use the module CLI
 go run . module list
-go run . module doctor
+go run . module make <name>
 ```
 
 ## Module CLI
 
 ```bash
-go run . module list            # list discovered modules
-go run . module status <name>   # show module status
-go run . module install <name>  # install a module
-go run . module enable <name>   # enable an installed module
-go run . module disable <name>  # disable a module
-go run . module graph           # show dependency graph (topological order)
-go run . module doctor          # validate all module manifests
-go run . module make <name>     # generate new module skeleton
-go run . module migrate --all   # run all pending DB migrations
+go run . module list             # list all modules with status
+go run . module make <name>      # scaffold a new module skeleton
+go run . module install <name>   # install a module (validate, migrate, register routes)
+go run . module enable <name>    # enable a module (cascade-enables deps)
+go run . module disable <name>   # disable a module (blocks if dependents are enabled)
+go run . module uninstall <name> # uninstall a module (rollback, unregister, remove source)
 ```
 
 ## Make Targets

@@ -12,16 +12,11 @@ func Cmd() *cobra.Command {
 	}
 	cmd.AddCommand(
 		ListCmd(),
-		StatusCmd(),
+		MakeCmd(),
 		InstallCmd(),
 		EnableCmd(),
 		DisableCmd(),
 		UninstallCmd(),
-		MigrateCmd(),
-		GraphCmd(),
-		DoctorCmd(),
-		MakeCmd(),
-		SyncCmd(),
 	)
 	return cmd
 }

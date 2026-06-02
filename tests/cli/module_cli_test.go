@@ -26,23 +26,3 @@ func TestModuleCLI_List(t *testing.T) {
 	require.NoError(t, err, "module list failed: %s", string(out))
 	require.NotEmpty(t, string(out))
 }
-
-// TestModuleCLI_Doctor verifies that `go run . module doctor` exits 0.
-func TestModuleCLI_Doctor(t *testing.T) {
-	cmd := exec.Command("go", "run", ".", "module", "doctor")
-	cmd.Dir = projectRoot()
-	cmd.Env = os.Environ()
-
-	out, err := cmd.CombinedOutput()
-	require.NoError(t, err, "module doctor failed: %s", string(out))
-}
-
-// TestModuleCLI_Graph verifies that `go run . module graph` exits 0.
-func TestModuleCLI_Graph(t *testing.T) {
-	cmd := exec.Command("go", "run", ".", "module", "graph")
-	cmd.Dir = projectRoot()
-	cmd.Env = os.Environ()
-
-	out, err := cmd.CombinedOutput()
-	require.NoError(t, err, "module graph failed: %s", string(out))
-}

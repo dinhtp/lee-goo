@@ -11,7 +11,7 @@
 │   │   └── serve.go             — "api serve": composes all modules into HTTP server
 │   ├── module/                  — Cobra CLI for module lifecycle management
 │   │   ├── cmd.go
-│   │   └── *.go                 — list, status, install, enable, disable, graph, doctor, make, migrate, sync, tidy, upgrade, compile_check, remove, uninstall
+│   │   └── *.go                 — list, make, install, enable, disable, uninstall
 │   └── worker/
 │       ├── cmd.go               — "worker" subcommand
 │       └── start.go             — "worker start" (not yet implemented)
@@ -76,7 +76,7 @@
 │   │   ├── authz_flow_test.go
 │   │   └── core_flow_test.go
 │   └── cli/
-│       └── module_cli_test.go   — CLI smoke tests (list/doctor/graph exit 0)
+│       └── module_cli_test.go   — CLI smoke tests (module list exit 0)
 └── docs/                        — Project documentation
 ```
 
