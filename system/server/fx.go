@@ -3,13 +3,13 @@ package server
 import (
 	"context"
 	"fmt"
-	"log/slog"
 
 	echolib "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/fx"
 
 	"github.com/dinhtp/lee-goo/system/config"
+	"github.com/dinhtp/lee-goo/system/logger"
 )
 
 // NewEchoEngine builds an Engine from config with default middleware applied.
@@ -37,12 +37,12 @@ func NewEchoEngine(cfg *config.Config) (Engine, *echolib.Echo, error) {
 }
 
 // RegisterLifecycle hooks the engine start/stop into the fx lifecycle.
-func RegisterLifecycle(lc fx.Lifecycle, e Engine) {
+func RegisterLifecycle(lc fx.Lifecycle, e Engine, log *logger.Logger) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
 				if err := e.Startup(); err != nil {
-					slog.Default().Info("http server stopped", "reason", err)
+					log.Sugar().Infow("http server stopped", "reason", err)
 				}
 			}()
 			return nil

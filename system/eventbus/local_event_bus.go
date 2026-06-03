@@ -2,8 +2,9 @@ package eventbus
 
 import (
 	"context"
-	"log/slog"
 	"sync"
+
+	"github.com/dinhtp/lee-goo/system/logger"
 )
 
 // localEventBus is an in-process publish/subscribe implementation of EventBus.
@@ -12,14 +13,14 @@ import (
 type localEventBus struct {
 	mu       sync.RWMutex
 	handlers map[string][]Handler
-	logger   *slog.Logger
+	logger   *logger.Logger
 }
 
 // compile-time interface check
 var _ EventBus = (*localEventBus)(nil)
 
 // NewLocalEventBus constructs an in-process EventBus backed by a handler map.
-func NewLocalEventBus(logger *slog.Logger) EventBus {
+func NewLocalEventBus(logger *logger.Logger) EventBus {
 	return &localEventBus{
 		handlers: make(map[string][]Handler),
 		logger:   logger,
@@ -44,7 +45,7 @@ func (b *localEventBus) Publish(ctx context.Context, topic string, payload any) 
 
 	for _, h := range handlers {
 		if err := h(ctx, payload); err != nil {
-			b.logger.Error("event handler error", "topic", topic, "error", err)
+			b.logger.Sugar().Errorw("event handler error", "topic", topic, "error", err)
 			// Continue to other handlers — one failure does not abort publish.
 		}
 	}
