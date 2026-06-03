@@ -21,7 +21,7 @@
 │   ├── eventbus/                — EventBus interface, NoopEventBus, LocalEventBus + fx provider
 │   ├── extension/               — Priority-ordered ExtensionRegistry + fx provider
 │   ├── http/                    — Echo v4 server lifecycle + fx provider
-│   ├── logger/                  — slog.Logger (JSON handler) + fx provider
+│   ├── logger/                  — zap.Logger (JSON, trace ID, Echo interface) + fx provider
 │   ├── security/                — Signer/Verifier JWT interfaces (HMAC-SHA256) + fx provider
 │   └── fx/options.go            — Options() + TestOptions() composing all system providers
 ├── modules/
@@ -101,7 +101,7 @@
 | `github.com/jackc/pgx/v5` | v5.9.2 | PostgreSQL driver (stdlib adapter) |
 | `github.com/jmoiron/sqlx` | v1.4.0 | SQL extension (named queries, struct scanning) |
 | `github.com/golang-migrate/migrate/v4` | v4.19.1 | DB migrations (in modules/core/go.mod) |
-| `log/slog` | stdlib | Structured logging (JSON handler) |
+| `go.uber.org/zap` | v1.28.0 | Structured logging (JSON, trace ID, Echo interface) |
 | `github.com/stretchr/testify` | v1.10.0 | Test assertions |
 
 ## Key Interfaces

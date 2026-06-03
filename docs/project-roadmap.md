@@ -109,7 +109,7 @@ Each follows the same module structure pattern as existing modules.
 | 2 | `module` CLI: 6 commands exist, all stubs (no service wiring yet) | High | `cmd/module/*.go` |
 | 3 | Default role hook in authz is a no-op TODO | Medium | `modules/authorization/fx/module.go` |
 | 4 | `POST /users/:id/roles` handler exists but not wired in router | Medium | `modules/authorization/internal/handler/role/router.go` |
-| 5 | `system/http` uses `slog.Default()` in goroutine instead of injected logger | Low | `system/http/server.go` |
+| 5 | ~~`system/http` uses `slog.Default()` in goroutine instead of injected logger~~ Fixed: `system/server/fx.go` now injects `*logger.Logger` | Resolved | `system/server/fx.go` |
 | 6 | `core` Upsert does not write lifecycle timestamps | Low | `modules/core/internal/repository/module/module_repository.go` |
 | 7 | `worker start` completely unimplemented | Low | `cmd/worker/start.go` |
 | 8 | `pkg/testapp.WithConfig()` is a no-op placeholder | Low | `pkg/testapp/options.go` |
