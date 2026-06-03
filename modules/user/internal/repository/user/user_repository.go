@@ -7,21 +7,22 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jmoiron/sqlx"
+
 	"github.com/dinhtp/lee-goo/modules/user/contracts"
 	domainUser "github.com/dinhtp/lee-goo/modules/user/internal/domain/user"
-	"github.com/dinhtp/lee-goo/system/database"
 )
 
 type userRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 // compile-time interface check
 var _ domainUser.UserPort = (*userRepository)(nil)
 
 // NewRepository constructs a SQL-backed UserPort.
-func NewRepository(conn database.Connection) domainUser.UserPort {
-	return &userRepository{db: conn.DB()}
+func NewRepository(db *sqlx.DB) domainUser.UserPort {
+	return &userRepository{db: db}
 }
 
 func (r *userRepository) FindByID(ctx context.Context, id string) (*domainUser.User, error) {

@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -20,7 +21,7 @@ type ServerConfig struct {
 	Port string `mapstructure:"port"`
 }
 
-// DatabaseConfig holds PostgreSQL connection settings.
+// DatabaseConfig holds PostgreSQL connection and pool settings.
 type DatabaseConfig struct {
 	Host     string `mapstructure:"host"`
 	Port     int    `mapstructure:"port"`
@@ -28,6 +29,12 @@ type DatabaseConfig struct {
 	Password string `mapstructure:"password"`
 	DBName   string `mapstructure:"dbname"`
 	SSLMode  string `mapstructure:"sslmode"`
+
+	// Pool settings — zero value means "use driver default".
+	MaxOpenConnections int           `mapstructure:"max_open_connections"`
+	MaxIdleConnections int           `mapstructure:"max_idle_connections"`
+	ConnectionMaxTime  time.Duration `mapstructure:"connection_max_time"`
+	ConnectionIdleTime time.Duration `mapstructure:"connection_idle_time"`
 }
 
 // AuthConfig holds JWT authentication settings.
@@ -58,6 +65,8 @@ func Load() (*Config, error) {
 	v.SetDefault("server.port", "8080")
 	v.SetDefault("database.port", 5432)
 	v.SetDefault("database.sslmode", "disable")
+	v.SetDefault("database.max_open_connections", 4)
+	v.SetDefault("database.max_idle_connections", 2)
 	v.SetDefault("auth.access_token_ttl", "15m")
 	v.SetDefault("auth.refresh_token_ttl", "168h")
 	v.SetDefault("log.level", "info")

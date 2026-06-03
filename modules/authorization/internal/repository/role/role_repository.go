@@ -6,21 +6,21 @@ import (
 	"errors"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/dinhtp/lee-goo/modules/authorization/contracts"
 	domainRole "github.com/dinhtp/lee-goo/modules/authorization/internal/domain/role"
-	"github.com/dinhtp/lee-goo/system/database"
 )
 
 type roleRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 // compile-time interface check
 var _ domainRole.RolePort = (*roleRepository)(nil)
 
-// NewRepository constructs a RolePort backed by the platform database connection.
-func NewRepository(conn database.Connection) domainRole.RolePort {
-	return &roleRepository{db: conn.DB()}
+// NewRepository constructs a RolePort backed by a *sqlx.DB.
+func NewRepository(db *sqlx.DB) domainRole.RolePort {
+	return &roleRepository{db: db}
 }
 
 func (r *roleRepository) Create(ctx context.Context, role domainRole.Role) error {

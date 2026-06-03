@@ -6,21 +6,21 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dinhtp/lee-goo/system/database"
+	"github.com/jmoiron/sqlx"
 	domainModule "github.com/dinhtp/lee-goo/modules/core/internal/domain/module"
 )
 
-// moduleRepository implements domainModule.ModulePort using database/sql.
+// moduleRepository implements domainModule.ModulePort using sqlx.
 type moduleRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 // compile-time interface check
 var _ domainModule.ModulePort = (*moduleRepository)(nil)
 
-// NewRepository constructs a moduleRepository from a platform database Connection.
-func NewRepository(conn database.Connection) domainModule.ModulePort {
-	return &moduleRepository{db: conn.DB()}
+// NewRepository constructs a moduleRepository from a *sqlx.DB.
+func NewRepository(db *sqlx.DB) domainModule.ModulePort {
+	return &moduleRepository{db: db}
 }
 
 const findAllQuery = `

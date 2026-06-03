@@ -6,7 +6,7 @@ import (
 	"go.uber.org/fx"
 
 	"github.com/dinhtp/lee-goo/system/config"
-	"github.com/dinhtp/lee-goo/system/database"
+	"github.com/dinhtp/lee-goo/system/database/postgresql"
 	"github.com/dinhtp/lee-goo/system/eventbus"
 	"github.com/dinhtp/lee-goo/system/extension"
 	systemhttp "github.com/dinhtp/lee-goo/system/http"
@@ -19,7 +19,7 @@ func Options() fx.Option {
 	return fx.Options(
 		fx.Provide(config.Load),
 		fx.Provide(logger.NewLogger),
-		database.FxOptions(),
+		postgresql.FxOptions(),
 		systemhttp.FxOptions(),
 		eventbus.FxOptions(),
 		extension.FxOptions(),

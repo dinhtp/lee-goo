@@ -2,24 +2,23 @@ package permission
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"strings"
 
+	"github.com/jmoiron/sqlx"
 	domainRole "github.com/dinhtp/lee-goo/modules/authorization/internal/domain/role"
-	"github.com/dinhtp/lee-goo/system/database"
 )
 
 type permissionRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 // compile-time interface check
 var _ domainRole.PermissionPort = (*permissionRepository)(nil)
 
-// NewRepository constructs a PermissionPort backed by the platform database connection.
-func NewRepository(conn database.Connection) domainRole.PermissionPort {
-	return &permissionRepository{db: conn.DB()}
+// NewRepository constructs a PermissionPort backed by a *sqlx.DB.
+func NewRepository(db *sqlx.DB) domainRole.PermissionPort {
+	return &permissionRepository{db: db}
 }
 
 func (r *permissionRepository) Create(ctx context.Context, p domainRole.Permission) error {
