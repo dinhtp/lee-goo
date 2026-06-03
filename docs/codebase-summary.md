@@ -17,7 +17,7 @@
 │       └── start.go             — "worker start" (not yet implemented)
 ├── system/                      — Shared infrastructure, no business logic
 │   ├── config/config.go         — Viper config: ServerConfig, DatabaseConfig, AuthConfig, LogConfig
-│   ├── database/                — pgx stdlib Connection interface + fx provider
+│   ├── database/                — sqlx Connection adapter + postgresql/ sub-package + fx provider
 │   ├── eventbus/                — EventBus interface, NoopEventBus, LocalEventBus + fx provider
 │   ├── extension/               — Priority-ordered ExtensionRegistry + fx provider
 │   ├── http/                    — Echo v4 server lifecycle + fx provider
@@ -31,7 +31,7 @@
 │   │   ├── internal/
 │   │   │   ├── domain/module/   — Module entity, UseCase interface, ErrCircularDependency
 │   │   │   ├── service/module/  — TopologicalSort, install/enable/disable/sync/doctor logic
-│   │   │   ├── repository/module/ — pgx persistence
+│   │   │   ├── repository/module/ — sqlx persistence
 │   │   │   └── handler/module/  — Echo handler + router
 │   │   ├── migrations/          — SQL migrations for modules table
 │   │   ├── tests/               — TopologicalSort unit tests
@@ -42,7 +42,7 @@
 │   │   ├── internal/
 │   │   │   ├── domain/user/     — User entity, UserPort, UseCase interfaces
 │   │   │   ├── service/user/    — Service + UserServiceAdapter
-│   │   │   ├── repository/user/ — pgx persistence (UserPort implementation)
+│   │   │   ├── repository/user/ — sqlx persistence (UserPort implementation)
 │   │   │   └── handler/user/    — Echo handler + router
 │   │   ├── migrations/          — SQL migrations for users table
 │   │   └── fx/module.go         — Fx wiring
@@ -60,7 +60,7 @@
 │       ├── internal/
 │       │   ├── domain/role/     — Role entity, RoleUseCase/PolicyUseCase interfaces
 │       │   ├── service/role/    — Service with in-memory permission cache (sync.Map)
-│       │   ├── repository/      — role/ and permission/ pgx repositories
+│       │   ├── repository/      — role/ and permission/ sqlx repositories
 │       │   └── handler/role/    — Echo handler + router
 │       ├── migrations/          — roles, permissions, role_permissions tables
 │       └── fx/module.go         — Fx wiring (+ user.after_created extension hook)
@@ -98,7 +98,8 @@
 | `github.com/spf13/cobra` | v1.10.2 | CLI framework |
 | `github.com/spf13/viper` | v1.21.0 | Config loading |
 | `github.com/golang-jwt/jwt/v5` | v5.3.1 | JWT signing/verification |
-| `github.com/jackc/pgx/v5` | v5.9.2 | PostgreSQL driver |
+| `github.com/jackc/pgx/v5` | v5.9.2 | PostgreSQL driver (stdlib adapter) |
+| `github.com/jmoiron/sqlx` | v1.4.0 | SQL extension (named queries, struct scanning) |
 | `github.com/golang-migrate/migrate/v4` | v4.19.1 | DB migrations (in modules/core/go.mod) |
 | `log/slog` | stdlib | Structured logging (JSON handler) |
 | `github.com/stretchr/testify` | v1.10.0 | Test assertions |

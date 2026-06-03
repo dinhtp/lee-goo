@@ -39,7 +39,7 @@ internal/
                           NO framework dependencies allowed here
   service/{entity}/     ← ADAPTERS-IN: use-case implementations
                           Depends on domain interfaces only
-  repository/{entity}/  ← ADAPTERS-OUT: pgx persistence
+  repository/{entity}/  ← ADAPTERS-OUT: sqlx persistence
                           Implements domain port interfaces
   handler/{entity}/     ← ADAPTERS-IN: Echo HTTP handlers
                           Calls use-case interfaces only
