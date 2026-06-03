@@ -84,7 +84,7 @@
 
 | Module | Go Module Path | Status | Key Dependencies |
 |--------|---------------|--------|------------------|
-| core | `github.com/dinhtp/lee-goo/modules/core` | stable | system/database, system/http, system/eventbus |
+| core | `github.com/dinhtp/lee-goo/modules/core` | stable | system/database, system/server, system/eventbus |
 | user | `github.com/dinhtp/lee-goo/modules/user` | stable | system/database, system/eventbus, system/extension |
 | authentication | `github.com/dinhtp/lee-goo/modules/authentication` | stable | modules/user (contracts), system/security, system/eventbus |
 | authorization | `github.com/dinhtp/lee-goo/modules/authorization` | stable | system/database, system/extension, system/eventbus |

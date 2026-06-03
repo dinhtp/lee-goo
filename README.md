@@ -86,7 +86,7 @@ go run . module uninstall <name> # uninstall a module (rollback, unregister, rem
 │   ├── database/            — pgx stdlib connection (database/sql driver)
 │   ├── eventbus/            — async event bus (local in-process)
 │   ├── extension/           — extension point registry
-│   ├── http/                — Echo server lifecycle
+│   ├── server/              — Echo server engine (Engine interface + fx lifecycle)
 │   ├── logger/              — slog logger (JSON handler)
 │   ├── security/            — JWT signer/verifier interfaces
 │   └── fx/                  — platform fx.Option composition
