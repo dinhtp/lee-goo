@@ -9,7 +9,7 @@ import (
 	"github.com/dinhtp/lee-goo/system/database/postgresql"
 	"github.com/dinhtp/lee-goo/system/eventbus"
 	"github.com/dinhtp/lee-goo/system/extension"
-	systemhttp "github.com/dinhtp/lee-goo/system/http"
+	systemserver "github.com/dinhtp/lee-goo/system/server"
 	"github.com/dinhtp/lee-goo/system/logger"
 	"github.com/dinhtp/lee-goo/system/security"
 )
@@ -20,7 +20,7 @@ func Options() fx.Option {
 		fx.Provide(config.Load),
 		fx.Provide(logger.NewLogger),
 		postgresql.FxOptions(),
-		systemhttp.FxOptions(),
+		systemserver.FxOptions(),
 		eventbus.FxOptions(),
 		extension.FxOptions(),
 		// security.NewJWTSecurity returns *jwtSecurity; NewSigner/NewVerifier
