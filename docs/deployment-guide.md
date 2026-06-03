@@ -268,6 +268,7 @@ The migration runner reads `DATABASE_URL` from the environment (format: `postgre
 | `GET` | `/users` | user | List users |
 | `GET` | `/users/:id` | user | Get user |
 | `PUT` | `/users/:id` | user | Update user |
+| `DELETE` | `/users/:id` | user | Delete user |
 | `POST` | `/auth/login` | authentication | Login → JWT token pair |
 | `POST` | `/auth/refresh` | authentication | Refresh access token |
 | `POST` | `/auth/logout` | authentication | Logout (no-op, stateless) |

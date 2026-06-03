@@ -20,8 +20,8 @@
 │   ├── database/                — sqlx Connection adapter + postgresql/ sub-package + fx provider
 │   ├── eventbus/                — EventBus interface, NoopEventBus, LocalEventBus + fx provider
 │   ├── extension/               — Priority-ordered ExtensionRegistry + fx provider
-│   ├── http/                    — Echo v4 server lifecycle + fx provider
-│   ├── logger/                  — zap.Logger (JSON, trace ID, Echo interface) + fx provider
+│   ├── server/                  — Echo Engine interface (engine, config, fx lifecycle)
+│   ├── logger/                  — zap.Logger (JSON, RFC3339, trace ID, Echo interface impl) + fx provider
 │   ├── security/                — Signer/Verifier JWT interfaces (HMAC-SHA256) + fx provider
 │   └── fx/options.go            — Options() + TestOptions() composing all system providers
 ├── modules/
@@ -65,6 +65,8 @@
 │       ├── migrations/          — roles, permissions, role_permissions tables
 │       └── fx/module.go         — Fx wiring (+ user.after_created extension hook)
 ├── pkg/
+│   ├── converter/               — string-to-primitive-type converters (data_type.go, value_pointer.go)
+│   ├── hashing/                 — Algorithm interface (Generate/Compare) + bcrypt implementation
 │   ├── validate/validate.go     — Echo bind + validator helper
 │   └── testapp/                 — Integration test fx harness
 │       ├── testapp.go           — App struct, New(), Start()
@@ -102,7 +104,7 @@
 | `github.com/jmoiron/sqlx` | v1.4.0 | SQL extension (named queries, struct scanning) |
 | `github.com/golang-migrate/migrate/v4` | v4.19.1 | DB migrations (in modules/core/go.mod) |
 | `go.uber.org/zap` | v1.28.0 | Structured logging (JSON, trace ID, Echo interface) |
-| `github.com/stretchr/testify` | v1.10.0 | Test assertions |
+| `github.com/stretchr/testify` | v1.11.1 | Test assertions |
 
 ## Key Interfaces
 

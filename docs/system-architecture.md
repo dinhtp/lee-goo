@@ -20,7 +20,7 @@
 ┌──────────────▼──────────────────────────────────┐
 │              system/ (shared infrastructure)   │
 │  config   database  eventbus  extension           │
-│  http     logger   security  fx                  │
+│  server   logger   security  fx                  │
 └─────────────────────────────────────────────────┘
 ```
 
