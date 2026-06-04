@@ -97,3 +97,16 @@ func (l *Logger) WithErr(err error) *Logger {
 	cloned.Logger = cloned.With(zap.String(FieldError, err.Error()))
 	return cloned
 }
+
+func (l *Logger) WithFields(fields map[string]any) *Logger {
+	cloned := l.clone()
+	logFields := make([]zap.Field, 0)
+
+	for key, value := range fields {
+		logFields = append(logFields, zap.Any(key, value))
+	}
+
+	cloned.Logger = cloned.With(logFields...)
+
+	return cloned
+}
