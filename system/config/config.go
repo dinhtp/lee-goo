@@ -6,14 +6,22 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
+
+	"github.com/dinhtp/lee-goo/static"
 )
 
 // Config holds all application configuration loaded from environment variables.
 type Config struct {
+	Env      string         `mapstructure:"env"`
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Auth     AuthConfig     `mapstructure:"auth"`
 	Log      LogConfig      `mapstructure:"log"`
+}
+
+// IsDevelopment returns true when running in a local or dev environment.
+func (c *Config) IsDevelopment() bool {
+	return c.Env == static.EnvLocal || c.Env == static.EnvDev
 }
 
 // ServerConfig holds HTTP server settings.
@@ -62,6 +70,7 @@ func Load() (*Config, error) {
 	_ = v.ReadInConfig()
 
 	// Sensible defaults so the app starts without full configuration.
+	v.SetDefault("env", "local")
 	v.SetDefault("server.port", "8080")
 	v.SetDefault("database.port", 5432)
 	v.SetDefault("database.sslmode", "disable")
