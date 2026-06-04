@@ -39,14 +39,19 @@ Full variable reference:
 
 | Variable | Default | Required |
 |----------|---------|----------|
+| `ENV` | `local` | No |
 | `SERVER_PORT` | `8080` | No |
-| `DATABASE_HOST` | — | Yes |
+| `DATABASE_HOST` | `localhost` | Yes |
 | `DATABASE_PORT` | `5432` | No |
 | `DATABASE_USER` | — | Yes |
 | `DATABASE_PASSWORD` | — | Yes |
 | `DATABASE_DBNAME` | — | Yes |
 | `DATABASE_SSLMODE` | `disable` | No |
-| `AUTH_JWT_SECRET` | — | Yes |
+| `DATABASE_MAX_OPEN_CONNECTIONS` | `4` | No |
+| `DATABASE_MAX_IDLE_CONNECTIONS` | `2` | No |
+| `DATABASE_CONNECTION_MAX_TIME` | `0` | No |
+| `DATABASE_CONNECTION_IDLE_TIME` | `0` | No |
+| `AUTH_JWT_SECRET` | — | Yes (prod) |
 | `AUTH_ACCESS_TOKEN_TTL` | `15m` | No |
 | `AUTH_REFRESH_TOKEN_TTL` | `168h` | No |
 | `LOG_LEVEL` | `info` | No |
@@ -220,7 +225,7 @@ modules/authorization/migrations/
 2. Follow the pattern: `000001_create_{table}.up.sql` / `.down.sql`
 3. Run `go run . module migrate <name>`
 
-The migration runner reads `DATABASE_URL` from the environment (format: `postgres://user:pass@host:port/dbname?sslmode=disable`).
+The migration runner builds its DSN from the standard `DATABASE_*` config fields (no `DATABASE_URL` required).
 
 ---
 

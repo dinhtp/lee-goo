@@ -108,9 +108,35 @@ Each module owns its own SQL migrations in `migrations/`:
 modules/{name}/migrations/
   000001_create_{table}.up.sql
   000001_create_{table}.down.sql
+  fs.go          ← //go:embed *.sql → var FS embed.FS
 ```
 
-The module CLI (`go run . module migrate`) runs golang-migrate against each module's migration directory in dependency order (topological sort).
+Each module exposes a `MigrationSource() fx.Option` in `fx/migration.go`:
+
+```go
+func MigrationSource() fx.Option {
+    return fx.Provide(
+        fx.Annotate(
+            func() migrator.Source { return migrator.Source{Name: "core", FS: migrations.FS, Path: "."} },
+            fx.ResultTags(`group:"migration.sources"`),
+        ),
+    )
+}
+```
+
+`system/fx.MigrateOptions()` composes config + logger + DB + migrator (excludes HTTP/eventbus/security) for lean CLI use:
+
+```go
+fx.New(
+    systemfx.MigrateOptions(),
+    coreModule.MigrationSource(),
+    userModule.MigrationSource(),
+    authzModule.MigrationSource(),
+    fx.Invoke(func(runner *migrator.Runner) { runner.UpFor(ctx, name) }),
+)
+```
+
+Each module gets its own `schema_migrations_<name>` table in Postgres.
 
 ## Module Manifest (module.yaml)
 

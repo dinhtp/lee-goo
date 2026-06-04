@@ -24,18 +24,18 @@ Core infrastructure fully implemented and stable.
 
 ## Phase 2 — Complete Module CLI (Near-term)
 
-All 6 `module` subcommands are currently stubs. Wire them to the actual service layer.
+`module install` is implemented via `MigrateOptions()` + per-module `MigrationSource()`. Remaining commands are stubs.
 
-| Command | Priority | Blocker |
-|---------|----------|---------|
-| `module list` | High | needs fx app initialization for disk discovery |
-| `module install <name>` | High | needs full lifecycle service wiring |
-| `module enable <name>` | High | same |
-| `module disable <name>` | High | same |
-| `module uninstall <name>` | High | same |
-| `module make <name>` | Medium | scaffold generator (template) |
+| Command | Status | Notes |
+|---------|--------|-------|
+| `module install <name>` | ✅ Done | fx + migrator: `runner.UpFor(ctx, name)`, 30s timeout |
+| `module list` | Stub | needs fx app init for disk discovery |
+| `module enable <name>` | Stub | needs lifecycle service wiring |
+| `module disable <name>` | Stub | needs lifecycle service wiring |
+| `module uninstall <name>` | Stub | needs lifecycle service wiring |
+| `module make <name>` | Stub | scaffold generator (template) |
 
-**Key work:** Initialize a minimal fx app within CLI context (no HTTP server) to access DB and service layer. Factor `pkg/cliapp` as a variant of `pkg/testapp` without HTTP.
+**Key work:** Factor a `pkg/cliapp` (variant of `pkg/testapp`, no HTTP) for DB + service access in remaining CLI commands.
 
 ---
 
@@ -106,7 +106,7 @@ Each follows the same module structure pattern as existing modules.
 | # | Issue | Severity | File |
 |---|-------|----------|------|
 | 1 | Dockerfile references `modules/module_manager/` (old name) | High | `deployment/Dockerfile` |
-| 2 | `module` CLI: 6 commands exist, all stubs (no service wiring yet) | High | `cmd/module/*.go` |
+| 2 | `module` CLI: `install` wired; `list/enable/disable/uninstall/make` still stubs | Medium | `cmd/module/*.go` |
 | 3 | Default role hook in authz is a no-op TODO | Medium | `modules/authorization/fx/module.go` |
 | 4 | `POST /users/:id/roles` handler exists but not wired in router | Medium | `modules/authorization/internal/handler/role/router.go` |
 | 5 | ~~`system/http` uses `slog.Default()` in goroutine instead of injected logger~~ Fixed: `system/server/fx.go` now injects `*logger.Logger` | Resolved | `system/server/fx.go` |
