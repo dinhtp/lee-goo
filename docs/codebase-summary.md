@@ -23,7 +23,8 @@
 │   ├── server/                  — Echo Engine interface (engine, config, fx lifecycle)
 │   ├── logger/                  — zap.Logger (JSON, RFC3339, trace ID, Echo interface impl) + fx provider
 │   ├── security/                — Signer/Verifier JWT interfaces (HMAC-SHA256) + fx provider
-│   └── fx/options.go            — Options() + TestOptions() composing all system providers
+│   ├── migrator/                — golang-migrate Runner + Source; per-module schema_migrations_<name> tables
+│   └── fx/                      — Options() + TestOptions() + MigrateOptions() (lean CLI composition)
 ├── modules/
 │   ├── core/                    — Module lifecycle management (go.mod: github.com/dinhtp/lee-goo/modules/core)
 │   │   ├── contracts/           — ModuleService interface, event/error types
@@ -33,9 +34,9 @@
 │   │   │   ├── service/module/  — TopologicalSort, install/enable/disable/sync/doctor logic
 │   │   │   ├── repository/module/ — sqlx persistence
 │   │   │   └── handler/module/  — Echo handler + router
-│   │   ├── migrations/          — SQL migrations for modules table
+│   │   ├── migrations/          — SQL migrations for modules table (fs.go embeds *.sql)
 │   │   ├── tests/               — TopologicalSort unit tests
-│   │   └── fx/module.go         — Fx wiring
+│   │   └── fx/                  — module.go (full wiring) + migration.go (MigrationSource)
 │   ├── user/                    — User CRUD (go.mod: github.com/dinhtp/lee-goo/modules/user)
 │   │   ├── contracts/           — UserService interface, UserCreatedEvent, error types
 │   │   ├── config/              — UserConfig struct
@@ -44,8 +45,8 @@
 │   │   │   ├── service/user/    — Service + UserServiceAdapter
 │   │   │   ├── repository/user/ — sqlx persistence (UserPort implementation)
 │   │   │   └── handler/user/    — Echo handler + router
-│   │   ├── migrations/          — SQL migrations for users table
-│   │   └── fx/module.go         — Fx wiring
+│   │   ├── migrations/          — SQL migrations for users table (fs.go embeds *.sql)
+│   │   └── fx/                  — module.go (full wiring) + migration.go (MigrationSource)
 │   ├── authentication/          — Stateless JWT auth (go.mod: github.com/dinhtp/lee-goo/modules/authentication)
 │   │   ├── contracts/           — AuthService interface, TokenPair, event/error types
 │   │   ├── config/              — AuthConfig (access/refresh TTLs)
@@ -62,8 +63,8 @@
 │       │   ├── service/role/    — Service with in-memory permission cache (sync.Map)
 │       │   ├── repository/      — role/ and permission/ sqlx repositories
 │       │   └── handler/role/    — Echo handler + router
-│       ├── migrations/          — roles, permissions, role_permissions tables
-│       └── fx/module.go         — Fx wiring (+ user.after_created extension hook)
+│       ├── migrations/          — roles, permissions, role_permissions tables (fs.go embeds *.sql)
+│       └── fx/                  — module.go (full wiring) + migration.go (MigrationSource)
 ├── pkg/
 │   ├── converter/               — string-to-primitive-type converters (data_type.go, value_pointer.go)
 │   ├── hashing/                 — Algorithm interface (Generate/Compare) + bcrypt implementation
@@ -102,7 +103,7 @@
 | `github.com/golang-jwt/jwt/v5` | v5.3.1 | JWT signing/verification |
 | `github.com/jackc/pgx/v5` | v5.9.2 | PostgreSQL driver (stdlib adapter) |
 | `github.com/jmoiron/sqlx` | v1.4.0 | SQL extension (named queries, struct scanning) |
-| `github.com/golang-migrate/migrate/v4` | v4.19.1 | DB migrations (in modules/core/go.mod) |
+| `github.com/golang-migrate/migrate/v4` | v4.19.1 | DB migrations via `system/migrator` (iofs + postgres driver) |
 | `go.uber.org/zap` | v1.28.0 | Structured logging (JSON, trace ID, Echo interface) |
 | `github.com/stretchr/testify` | v1.11.1 | Test assertions |
 
