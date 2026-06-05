@@ -30,10 +30,11 @@
 │   │   ├── contracts/           — ModuleService interface, event/error types
 │   │   ├── config/              — ModuleConfig struct
 │   │   ├── internal/
-│   │   │   ├── domain/module/   — Module entity, UseCase interface, ErrCircularDependency
-│   │   │   ├── service/module/  — TopologicalSort, install/enable/disable/sync/doctor logic
+│   │   │   ├── domain/module/   — Module entity, UseCase interface, sentinel errors (ErrProtectedModule etc.)
+│   │   │   ├── service/module/  — TopologicalSort, Discover/Install/Enable/Disable/sync logic
 │   │   │   ├── repository/module/ — sqlx persistence
-│   │   │   └── handler/module/  — Echo handler + router
+│   │   │   ├── handler/health/  — Liveness probe handler (GET /healthz, root Echo, no middleware)
+│   │   │   └── handler/module/  — Echo handler + router for /admin/modules
 │   │   ├── migrations/          — SQL migrations for modules table (fs.go embeds *.sql)
 │   │   ├── tests/               — TopologicalSort unit tests
 │   │   └── fx/                  — module.go (full wiring) + migration.go (MigrationSource)

@@ -33,6 +33,7 @@
 | 6 | User, auth, authz unit tests pass | `go test ./modules/user/... ./modules/authentication/... ./modules/authorization/...` |
 | 7 | `go vet ./...` passes cleanly | No vet errors |
 | 8 | Platform fx wires all providers | `cmd/api/main.go` compiles with all four modules composed |
+| 9 | Liveness probe responds correctly | `GET /healthz` returns HTTP 200 `{"status":"ok"}` |
 
 ## Module Roadmap (Future)
 

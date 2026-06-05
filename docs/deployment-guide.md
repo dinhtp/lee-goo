@@ -54,7 +54,7 @@ Full variable reference:
 | `AUTH_JWT_SECRET` | — | Yes (prod) |
 | `AUTH_ACCESS_TOKEN_TTL` | `15m` | No |
 | `AUTH_REFRESH_TOKEN_TTL` | `168h` | No |
-| `LOG_LEVEL` | `info` | No |
+| `SERVER_LOG_LEVEL` | `info` | No |
 
 ### 3. Run Migrations
 
@@ -279,5 +279,6 @@ The migration runner builds its DSN from the standard `DATABASE_*` config fields
 | `POST` | `/auth/logout` | authentication | Logout (no-op, stateless) |
 | `POST` | `/roles` | authorization | Create role |
 | `GET` | `/roles` | authorization | List roles |
+| `GET` | `/healthz` | core | Liveness probe — returns `{"status":"ok"}` |
 | `GET` | `/admin/modules` | core | List discovered modules |
 | `GET` | `/admin/modules/:name` | core | Get module status |

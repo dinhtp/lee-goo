@@ -43,6 +43,7 @@ internal/
                           Implements domain port interfaces
   handler/{entity}/     ← ADAPTERS-IN: Echo HTTP handlers
                           Calls use-case interfaces only
+                          Special case: handler/health/ mounts on root Echo (bypasses all middleware groups)
   router/               ← mounts handlers on Echo instance
 ```
 

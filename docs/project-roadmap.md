@@ -24,18 +24,18 @@ Core infrastructure fully implemented and stable.
 
 ## Phase 2 — Complete Module CLI (Near-term)
 
-`module install` is implemented via `MigrateOptions()` + per-module `MigrationSource()`. Remaining commands are stubs.
+Service layer fully implemented. CLI cobra commands still need DB wiring.
 
 | Command | Status | Notes |
 |---------|--------|-------|
 | `module install <name>` | ✅ Done | fx + migrator: `runner.UpFor(ctx, name)`, 30s timeout |
-| `module list` | Stub | needs fx app init for disk discovery |
-| `module enable <name>` | Stub | needs lifecycle service wiring |
-| `module disable <name>` | Stub | needs lifecycle service wiring |
-| `module uninstall <name>` | Stub | needs lifecycle service wiring |
+| `module list` | Service ✅ / CLI stub | `service.Discover()` implemented; cobra cmd prints placeholder |
+| `module enable <name>` | Service ✅ / CLI stub | `service.Enable()` implemented; cobra cmd prints placeholder |
+| `module disable <name>` | Service ✅ / CLI stub | `service.Disable()` implemented; cobra cmd prints placeholder |
+| `module uninstall <name>` | Service ✅ / CLI stub | `service.Uninstall()` in contracts; cobra cmd is stub |
 | `module make <name>` | Stub | scaffold generator (template) |
 
-**Key work:** Factor a `pkg/cliapp` (variant of `pkg/testapp`, no HTTP) for DB + service access in remaining CLI commands.
+**Key work:** Wire DB + service into remaining cobra commands (pkg/cliapp pattern or inline fx.New like `module install`).
 
 ---
 
