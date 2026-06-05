@@ -4,6 +4,7 @@ package fx
 import (
 	"go.uber.org/fx"
 
+	healthHandler "github.com/dinhtp/lee-goo/modules/core/internal/handler/health"
 	moduleHandler "github.com/dinhtp/lee-goo/modules/core/internal/handler/module"
 	moduleRepository "github.com/dinhtp/lee-goo/modules/core/internal/repository/module"
 	moduleRouter "github.com/dinhtp/lee-goo/modules/core/internal/router"
@@ -12,8 +13,9 @@ import (
 
 // Module returns the fx.Option that wires the complete module management package.
 func Module() fx.Option {
-	return fx.Module("module",
+	return fx.Module("core",
 		fx.Provide(
+			healthHandler.NewHandler,
 			moduleRepository.NewRepository,
 			moduleService.NewService,
 			moduleHandler.NewHandler,
@@ -25,5 +27,6 @@ func Module() fx.Option {
 			),
 		),
 		fx.Invoke(moduleRouter.Register),
+		fx.Invoke(healthHandler.Register),
 	)
 }
