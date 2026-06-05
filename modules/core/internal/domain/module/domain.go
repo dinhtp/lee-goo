@@ -10,27 +10,22 @@ const (
 	StatusInstalled   Status = "installed"
 	StatusEnabled     Status = "enabled"
 	StatusDisabled    Status = "disabled"
-	StatusUpgrading   Status = "upgrading"
-	StatusFailed      Status = "failed"
 	StatusUninstalled Status = "uninstalled"
-	StatusRemoved     Status = "removed"
 )
 
 // Module is the aggregate root for a managed module.
 type Module struct {
-	Name                  string
-	Version               string
-	Status                Status
-	Path                  string
-	Checksum              string
-	InstalledAt           *time.Time
-	EnabledAt             *time.Time
-	DisabledAt            *time.Time
-	UpgradedAt            *time.Time
-	UninstalledAt         *time.Time
-	RemovedFromCodebaseAt *time.Time
-	CreatedAt             time.Time
-	UpdatedAt             time.Time
+	Name          string
+	Version       string
+	Status        Status
+	Path          string
+	Checksum      string
+	InstalledAt   *time.Time
+	EnabledAt     *time.Time
+	DisabledAt    *time.Time
+	UninstalledAt *time.Time
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 // Dependency describes a module dependency with its required/optional flag.

@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/require"
 
-	health "github.com/dinhtp/lee-goo/modules/core/internal/handler/health"
+	"github.com/dinhtp/lee-goo/modules/core/internal/handler/health"
 )
 
 // TestHealthzEndpoint verifies GET /healthz returns 200 {"status":"ok"} with no auth.

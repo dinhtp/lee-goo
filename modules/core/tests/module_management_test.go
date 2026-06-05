@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	serviceModule "github.com/dinhtp/lee-goo/modules/core/internal/service/module"
 	domainModule "github.com/dinhtp/lee-goo/modules/core/internal/domain/module"
+	serviceModule "github.com/dinhtp/lee-goo/modules/core/internal/service/module"
 )
 
 // TestTopologicalSort_Order verifies that dependencies are ordered before dependents.

@@ -9,8 +9,6 @@ type ModuleService interface {
 	Disable(ctx context.Context, name string) error
 	Uninstall(ctx context.Context, name string, force bool) error
 	Status(ctx context.Context, name string) (*ModuleInfo, error)
-	Graph(ctx context.Context) (map[string][]string, error)
-	Doctor(ctx context.Context) ([]string, error)
 }
 
 // ModuleInfo is the public read-only view of a module.

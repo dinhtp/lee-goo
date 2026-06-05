@@ -26,7 +26,7 @@ func NewRepository(db *sqlx.DB) domainModule.ModulePort {
 const findAllQuery = `
 SELECT name, version, status, path, checksum,
        installed_at, enabled_at, disabled_at,
-       upgraded_at, uninstalled_at, removed_from_codebase_at,
+       uninstalled_at,
        created_at, updated_at
 FROM modules
 ORDER BY name`
@@ -56,7 +56,7 @@ func (r *moduleRepository) FindAll(ctx context.Context) ([]domainModule.Module, 
 const findByNameQuery = `
 SELECT name, version, status, path, checksum,
        installed_at, enabled_at, disabled_at,
-       upgraded_at, uninstalled_at, removed_from_codebase_at,
+       uninstalled_at,
        created_at, updated_at
 FROM modules
 WHERE name = $1`
@@ -114,14 +114,11 @@ type scanner interface {
 func scanModule(s scanner) (domainModule.Module, error) {
 	var m domainModule.Module
 	var status string
-	var (
-		installedAt, enabledAt, disabledAt       *time.Time
-		upgradedAt, uninstalledAt, removedAt      *time.Time
-	)
+	var installedAt, enabledAt, disabledAt, uninstalledAt *time.Time
 	err := s.Scan(
 		&m.Name, &m.Version, &status, &m.Path, &m.Checksum,
 		&installedAt, &enabledAt, &disabledAt,
-		&upgradedAt, &uninstalledAt, &removedAt,
+		&uninstalledAt,
 		&m.CreatedAt, &m.UpdatedAt,
 	)
 	if err != nil {
@@ -131,8 +128,6 @@ func scanModule(s scanner) (domainModule.Module, error) {
 	m.InstalledAt = installedAt
 	m.EnabledAt = enabledAt
 	m.DisabledAt = disabledAt
-	m.UpgradedAt = upgradedAt
 	m.UninstalledAt = uninstalledAt
-	m.RemovedFromCodebaseAt = removedAt
 	return m, nil
 }

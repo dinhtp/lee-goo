@@ -9,20 +9,12 @@ import (
 	domainModule "github.com/dinhtp/lee-goo/modules/core/internal/domain/module"
 )
 
-// Discover scans the workspace for module.yaml manifests and returns them as
-// Module values (not persisted — use Sync to persist).
+// Discover syncs manifests to the DB then returns all tracked modules.
 func (s *service) Discover(ctx context.Context) ([]domainModule.Module, error) {
-	manifests, err := s.discoverManifests()
+	_ = s.sync(ctx) // best-effort: register new manifests before listing
+	modules, err := s.repo.FindAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("service.Discover: %w", err)
-	}
-	modules := make([]domainModule.Module, 0, len(manifests))
-	for _, mf := range manifests {
-		modules = append(modules, domainModule.Module{
-			Name:    mf.Name,
-			Version: mf.Version,
-			Status:  domainModule.StatusDiscovered,
-		})
 	}
 	return modules, nil
 }
@@ -95,45 +87,6 @@ func (s *service) Disable(ctx context.Context, name string) error {
 	return nil
 }
 
-// Upgrade marks a module as upgrading, then re-installs it at the new version.
-func (s *service) Upgrade(ctx context.Context, name string) error {
-	if err := s.assertNotProtected(name); err != nil {
-		return err
-	}
-	m, err := s.repo.FindByName(ctx, name)
-	if err != nil {
-		return fmt.Errorf("service.Upgrade find: %w", err)
-	}
-	if m == nil {
-		return domainModule.ErrModuleNotInstalled
-	}
-	// Mark upgrading
-	if err := s.repo.UpdateStatus(ctx, name, domainModule.StatusUpgrading); err != nil {
-		return fmt.Errorf("service.Upgrade status: %w", err)
-	}
-	// Re-discover manifest to pick up new version from disk
-	manifests, err := s.discoverManifests()
-	if err != nil {
-		_ = s.repo.UpdateStatus(ctx, name, domainModule.StatusFailed)
-		return fmt.Errorf("service.Upgrade discover: %w", err)
-	}
-	var newVersion string
-	for _, mf := range manifests {
-		if mf.Name == name {
-			newVersion = mf.Version
-			break
-		}
-	}
-	now := time.Now()
-	m.Version = newVersion
-	m.Status = domainModule.StatusInstalled
-	m.UpgradedAt = &now
-	if err := s.repo.Upsert(ctx, *m); err != nil {
-		return fmt.Errorf("service.Upgrade upsert: %w", err)
-	}
-	return nil
-}
-
 // Uninstall transitions a module to uninstalled; force bypasses dependent checks.
 func (s *service) Uninstall(ctx context.Context, name string, force bool) error {
 	if err := s.assertNotProtected(name); err != nil {
@@ -161,27 +114,6 @@ func (s *service) Uninstall(ctx context.Context, name string, force bool) error 
 	return nil
 }
 
-// Remove marks a module as removed from codebase (source no longer on disk).
-func (s *service) Remove(ctx context.Context, name string) error {
-	if err := s.assertNotProtected(name); err != nil {
-		return err
-	}
-	m, err := s.repo.FindByName(ctx, name)
-	if err != nil {
-		return fmt.Errorf("service.Remove find: %w", err)
-	}
-	if m == nil {
-		return domainModule.ErrModuleNotFound
-	}
-	if m.Status != domainModule.StatusUninstalled {
-		return fmt.Errorf("service.Remove: module must be uninstalled before removal")
-	}
-	now := time.Now()
-	m.Status = domainModule.StatusRemoved
-	m.RemovedFromCodebaseAt = &now
-	return s.repo.Upsert(ctx, *m)
-}
-
 // assertNotProtected returns ErrProtectedModule for built-in modules.
 func (s *service) assertNotProtected(name string) error {
 	if _, ok := protectedModules[name]; ok {
@@ -190,13 +122,13 @@ func (s *service) assertNotProtected(name string) error {
 	return nil
 }
 
-// assertNoDependents returns ErrModuleHasDependents if any enabled module
-// declares name as a required dependency.
-func (s *service) assertNoDependents(ctx context.Context, name string) error {
-	graph, err := s.Graph(ctx)
+// assertNoDependents returns ErrModuleHasDependents if any module declares name as a required dependency.
+func (s *service) assertNoDependents(_ context.Context, name string) error {
+	manifests, err := s.discoverManifests()
 	if err != nil {
 		return err
 	}
+	graph := s.buildDependencyGraph(manifests)
 	for mod, deps := range graph {
 		if mod == name {
 			continue
