@@ -16,7 +16,6 @@ type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Auth     AuthConfig     `mapstructure:"auth"`
-	Log      LogConfig      `mapstructure:"log"`
 }
 
 // IsDevelopment returns true when running in a local or dev environment.
@@ -27,6 +26,9 @@ func (c *Config) IsDevelopment() bool {
 // ServerConfig holds HTTP server settings.
 type ServerConfig struct {
 	Port string `mapstructure:"port"`
+	// LogLevel is the minimum log level. Valid values (case-insensitive): DEBUG, INFO, WARN, ERROR, PANIC, FATAL.
+	// Env var: SERVER_LOG_LEVEL.
+	LogLevel string `mapstructure:"log_level"`
 }
 
 // DatabaseConfig holds PostgreSQL connection and pool settings.
@@ -52,11 +54,6 @@ type AuthConfig struct {
 	RefreshTokenTTL string `mapstructure:"refresh_token_ttl"` // e.g. "168h"
 }
 
-// LogConfig holds logging settings.
-type LogConfig struct {
-	Level string `mapstructure:"level"` // debug, info, warn, error
-}
-
 // Load reads configuration from environment variables (and optionally a .env file).
 // The path parameter is optional — pass an empty string to skip file loading.
 func Load() (*Config, error) {
@@ -78,7 +75,7 @@ func Load() (*Config, error) {
 	v.SetDefault("database.max_idle_connections", 2)
 	v.SetDefault("auth.access_token_ttl", "15m")
 	v.SetDefault("auth.refresh_token_ttl", "168h")
-	v.SetDefault("log.level", "info")
+	v.SetDefault("server.log_level", "info")
 
 	var cfg Config
 	if err := v.Unmarshal(&cfg); err != nil {
