@@ -11,5 +11,4 @@ var (
 	ErrProtectedModule     = errors.New("module is protected and cannot be modified")
 	ErrInvalidModulePath   = errors.New("invalid module path")
 	ErrModuleNotInstalled  = errors.New("module is not installed")
-	ErrModuleNotEnabled    = errors.New("module is not enabled")
 )

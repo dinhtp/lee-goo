@@ -14,8 +14,6 @@ func Cmd() *cobra.Command {
 		ListCmd(),
 		MakeCmd(),
 		InstallCmd(),
-		EnableCmd(),
-		DisableCmd(),
 		UninstallCmd(),
 	)
 	return cmd

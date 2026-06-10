@@ -6,8 +6,6 @@ import "context"
 type UseCase interface {
 	Discover(ctx context.Context) ([]Module, error)
 	Install(ctx context.Context, name string) error
-	Enable(ctx context.Context, name string) error
-	Disable(ctx context.Context, name string) error
 	Uninstall(ctx context.Context, name string, force bool) error
 	Status(ctx context.Context, name string) (*Module, error)
 }

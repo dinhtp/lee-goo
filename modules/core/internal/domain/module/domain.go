@@ -8,8 +8,6 @@ type Status string
 const (
 	StatusDiscovered  Status = "discovered"
 	StatusInstalled   Status = "installed"
-	StatusEnabled     Status = "enabled"
-	StatusDisabled    Status = "disabled"
 	StatusUninstalled Status = "uninstalled"
 )
 
@@ -21,8 +19,6 @@ type Module struct {
 	Path          string
 	Checksum      string
 	InstalledAt   *time.Time
-	EnabledAt     *time.Time
-	DisabledAt    *time.Time
 	UninstalledAt *time.Time
 	CreatedAt     time.Time
 	UpdatedAt     time.Time

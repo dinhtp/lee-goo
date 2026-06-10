@@ -168,7 +168,7 @@ The module management service reads manifests to:
 1. Validate dependency declarations
 2. Compute topological install order
 3. Detect circular dependencies (Kahn's algorithm)
-4. Track install/enable/disable state in DB
+4. Track install/uninstall state in DB
 
 ## Go Workspace Structure
 

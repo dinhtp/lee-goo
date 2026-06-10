@@ -9,9 +9,9 @@ import (
 	"github.com/dinhtp/lee-goo/system/database/postgresql"
 	"github.com/dinhtp/lee-goo/system/eventbus"
 	"github.com/dinhtp/lee-goo/system/extension"
-	systemserver "github.com/dinhtp/lee-goo/system/server"
 	"github.com/dinhtp/lee-goo/system/logger"
 	"github.com/dinhtp/lee-goo/system/security"
+	systemserver "github.com/dinhtp/lee-goo/system/server"
 )
 
 // Options returns the complete set of system fx providers.

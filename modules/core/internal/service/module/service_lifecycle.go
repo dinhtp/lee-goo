@@ -40,53 +40,6 @@ func (s *service) Install(ctx context.Context, name string) error {
 	return nil
 }
 
-// Enable transitions an installed module to enabled status.
-func (s *service) Enable(ctx context.Context, name string) error {
-	if err := s.assertNotProtected(name); err != nil {
-		return err
-	}
-	m, err := s.repo.FindByName(ctx, name)
-	if err != nil {
-		return fmt.Errorf("service.Enable find: %w", err)
-	}
-	if m == nil {
-		return domainModule.ErrModuleNotInstalled
-	}
-	if m.Status != domainModule.StatusInstalled && m.Status != domainModule.StatusDisabled {
-		return domainModule.ErrModuleNotInstalled
-	}
-	now := time.Now()
-	m.Status = domainModule.StatusEnabled
-	m.EnabledAt = &now
-	if err := s.repo.Upsert(ctx, *m); err != nil {
-		return fmt.Errorf("service.Enable upsert: %w", err)
-	}
-	_ = s.eventBus.Publish(ctx, "module.enabled", contracts.ModuleEnabledEvent{Name: name})
-	return nil
-}
-
-// Disable transitions an enabled module to disabled status.
-func (s *service) Disable(ctx context.Context, name string) error {
-	if err := s.assertNotProtected(name); err != nil {
-		return err
-	}
-	m, err := s.repo.FindByName(ctx, name)
-	if err != nil {
-		return fmt.Errorf("service.Disable find: %w", err)
-	}
-	if m == nil || m.Status != domainModule.StatusEnabled {
-		return domainModule.ErrModuleNotEnabled
-	}
-	now := time.Now()
-	m.Status = domainModule.StatusDisabled
-	m.DisabledAt = &now
-	if err := s.repo.Upsert(ctx, *m); err != nil {
-		return fmt.Errorf("service.Disable upsert: %w", err)
-	}
-	_ = s.eventBus.Publish(ctx, "module.disabled", contracts.ModuleDisabledEvent{Name: name})
-	return nil
-}
-
 // Uninstall transitions a module to uninstalled; force bypasses dependent checks.
 func (s *service) Uninstall(ctx context.Context, name string, force bool) error {
 	if err := s.assertNotProtected(name); err != nil {

@@ -5,8 +5,6 @@ CREATE TABLE IF NOT EXISTS modules (
     path           VARCHAR(255) NOT NULL,
     checksum       VARCHAR(255),
     installed_at   TIMESTAMP,
-    enabled_at     TIMESTAMP,
-    disabled_at    TIMESTAMP,
     uninstalled_at TIMESTAMP,
     created_at     TIMESTAMP    NOT NULL DEFAULT NOW(),
     updated_at     TIMESTAMP    NOT NULL DEFAULT NOW()

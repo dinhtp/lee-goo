@@ -11,7 +11,7 @@
 │   │   └── serve.go             — "api serve": composes all modules into HTTP server
 │   ├── module/                  — Cobra CLI for module lifecycle management
 │   │   ├── cmd.go
-│   │   └── *.go                 — list, make, install, enable, disable, uninstall
+│   │   └── *.go                 — list, make, install, uninstall
 │   └── worker/
 │       ├── cmd.go               — "worker" subcommand
 │       └── start.go             — "worker start" (not yet implemented)
@@ -31,7 +31,7 @@
 │   │   ├── config/              — ModuleConfig struct
 │   │   ├── internal/
 │   │   │   ├── domain/module/   — Module entity, UseCase interface, sentinel errors (ErrProtectedModule etc.)
-│   │   │   ├── service/module/  — TopologicalSort, Discover/Install/Enable/Disable/sync logic
+│   │   │   ├── service/module/  — TopologicalSort, Discover/Install/Uninstall/sync logic
 │   │   │   ├── repository/module/ — sqlx persistence
 │   │   │   ├── handler/health/  — Liveness probe handler (GET /healthz, root Echo, no middleware)
 │   │   │   └── handler/module/  — Echo handler + router for /admin/modules
