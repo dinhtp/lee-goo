@@ -74,12 +74,13 @@ func (r *Runner) findSource(name string) (Source, error) {
 	return Source{}, fmt.Errorf("migration source %q not found", name)
 }
 
-func (r *Runner) runUp(_ context.Context, s Source) error {
+func (r *Runner) runUp(ctx context.Context, s Source) error {
 	m, db, err := r.newMigrate(s)
 	if err != nil {
 		return fmt.Errorf("migrator %s: %w", s.Name, err)
 	}
 	defer func() { _, _ = m.Close(); _ = db.Close() }()
+	stopOnCancel(ctx, m)
 
 	r.logger.WithFields(map[string]any{
 		"module": s.Name,
@@ -90,12 +91,13 @@ func (r *Runner) runUp(_ context.Context, s Source) error {
 	return nil
 }
 
-func (r *Runner) runDown(_ context.Context, s Source) error {
+func (r *Runner) runDown(ctx context.Context, s Source) error {
 	m, db, err := r.newMigrate(s)
 	if err != nil {
 		return fmt.Errorf("migrator %s: %w", s.Name, err)
 	}
 	defer func() { _, _ = m.Close(); _ = db.Close() }()
+	stopOnCancel(ctx, m)
 
 	r.logger.WithFields(map[string]any{
 		"module": s.Name,
@@ -104,6 +106,14 @@ func (r *Runner) runDown(_ context.Context, s Source) error {
 		return fmt.Errorf("migrator %s down: %w", s.Name, err)
 	}
 	return nil
+}
+
+// stopOnCancel signals the migrator to stop gracefully when ctx is cancelled.
+func stopOnCancel(ctx context.Context, m *migrate.Migrate) {
+	go func() {
+		<-ctx.Done()
+		m.GracefulStop <- true
+	}()
 }
 
 // newMigrate opens a dedicated single-connection *sql.DB for this source and returns
@@ -132,7 +142,7 @@ func (r *Runner) newMigrate(s Source) (*migrate.Migrate, *sql.DB, error) {
 
 	m, err := migrate.NewWithInstance("iofs", src, "postgres", driver)
 	if err != nil {
-		_ = db.Close()
+		_ = driver.Close() // closes both the advisory-lock conn and the pool reference
 		return nil, nil, err
 	}
 	return m, db, nil

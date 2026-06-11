@@ -11,15 +11,7 @@ import (
 
 // newConnection builds a DSN from cfg, applies pool settings, and opens the connection.
 func newConnection(cfg *config.Config) (Connection, error) {
-	dsn := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-		cfg.Database.Host,
-		cfg.Database.Port,
-		cfg.Database.User,
-		cfg.Database.Password,
-		cfg.Database.DBName,
-		cfg.Database.SSLMode,
-	)
+	dsn := cfg.Database.DSN()
 
 	poolCfg := &Config{
 		MaxOpenConnections: cfg.Database.MaxOpenConnections,
