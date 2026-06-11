@@ -11,7 +11,10 @@
 │   │   └── serve.go             — "api serve": composes all modules into HTTP server
 │   ├── module/                  — Cobra CLI for module lifecycle management
 │   │   ├── cmd.go
-│   │   └── *.go                 — list, make, install, uninstall
+│   │   ├── runner.go            — buildRunner(); //go:generate go run ./gen
+│   │   ├── registry.go — auto-generated moduleRegistry map (committed; regenerate via make generate)
+│   │   ├── *.go                 — list, make, install, uninstall
+│   │   └── gen/main.go          — generator: walks modules/*/fx/migration.go, writes registry.go
 │   └── worker/
 │       ├── cmd.go               — "worker" subcommand
 │       └── start.go             — "worker start" (not yet implemented)
