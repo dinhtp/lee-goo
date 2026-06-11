@@ -1,4 +1,4 @@
-.PHONY: dev run-api run-module test lint build migrate-up
+.PHONY: dev run-api run-module test lint build migrate-up generate
 
 dev:
 	docker compose up -d
@@ -20,3 +20,6 @@ build:
 
 migrate-up:
 	go run . module migrate --all
+
+generate:
+	go generate ./cmd/module/...
